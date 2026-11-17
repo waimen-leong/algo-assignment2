@@ -1,0 +1,8 @@
+# Normalise line endings so Windows and Linux checkouts produce clean diffs
+* text=auto
+
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.bmp binary
+*.pdf binary
