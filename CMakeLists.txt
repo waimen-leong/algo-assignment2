@@ -22,6 +22,7 @@ add_library(seamcore STATIC
     # D: flow_graph.cpp graphcut_seam.cpp)
     algos/flow_graph.cpp
     algos/graphcut_seam.cpp
+    core/energy_mt.cpp
 )
 target_include_directories(seamcore PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
