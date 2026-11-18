@@ -20,6 +20,8 @@ add_library(seamcore STATIC
     algos/greedy_seam.cpp
     # algos/ files go here (B: dp_seam.cpp, C: greedy_seam.cpp energy_mt.cpp,
     # D: flow_graph.cpp graphcut_seam.cpp)
+    algos/flow_graph.cpp
+    algos/graphcut_seam.cpp
 )
 target_include_directories(seamcore PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -34,7 +36,14 @@ else()
 endif()
 
 # ---- seamcarve: the app (Person E) -----------------------------------------
-add_executable(seamcarve app/main.cpp)
+# E added app/args.cpp, app/viz.cpp, app/ui.cpp; highgui is needed for the
+# interactive window and the animated visualisation.
+add_executable(seamcarve
+    app/main.cpp
+    app/args.cpp
+    app/viz.cpp
+    app/ui.cpp
+)
 target_link_libraries(seamcarve PRIVATE seamcore)
 
 # ---- tests (Person F) ------------------------------------------------------
