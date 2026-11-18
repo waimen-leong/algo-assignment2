@@ -1,5 +1,4 @@
 #include "core/energy.h"
-#include "core/energy_mt.h"
 #include <opencv2/imgproc.hpp>
 
 cv::Mat1f computeEnergy(const cv::Mat3b& img) {

@@ -41,3 +41,7 @@ target_link_libraries(seamcarve PRIVATE seamcore)
 # ---- tests (Person F) ------------------------------------------------------
 enable_testing()
 add_subdirectory(tests)
+
+# ---- benchmark: for threading (wai men) ------------------------------------
+add_executable(bench_energy bench/bench_energy.cpp)
+target_link_libraries(bench_energy PRIVATE seamcore)
