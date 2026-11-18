@@ -94,8 +94,8 @@ What you will likely see and should explain: near-linear speed-up on the large i
 
 ## Done when
 
-- [ ] Greedy merged, selectable with `--algo greedy`
-- [ ] Counter-example test passes
+- [x] Greedy merged, selectable with `--algo greedy`
+- [x] Counter-example test passes
 - [ ] Threading table (3 sizes × 4 thread counts) handed to F
 
 ## Report sections you write (by Thu night)
