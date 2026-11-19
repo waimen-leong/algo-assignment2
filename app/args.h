@@ -27,5 +27,5 @@ std::string usage();
 
 // The single place in the project that knows every algorithm class name.
 // Returns the stub finder for an unknown name so the pipeline always runs;
-// B, C and D each add one line here as their finder merges.
+// Shahir, Wai Men and Jun Siang each add one line here as their finder merges.
 std::unique_ptr<ISeamFinder> makeFinder(const std::string& name);

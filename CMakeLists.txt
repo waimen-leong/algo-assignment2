@@ -19,8 +19,8 @@ add_library(seamcore STATIC
     core/carver.cpp
     algos/greedy_seam.cpp
     core/energy_mt.cpp
-    # algos/ files go here (B: dp_seam.cpp, C: greedy_seam.cpp energy_mt.cpp,
-    # D: flow_graph.cpp graphcut_seam.cpp)
+    # algos/ files go here (Shahir: dp_seam.cpp, Wai Men: greedy_seam.cpp energy_mt.cpp,
+    # Jun Siang: flow_graph.cpp graphcut_seam.cpp)
     algos/dp_seam.cpp
     algos/flow_graph.cpp
     algos/graphcut_seam.cpp
@@ -52,7 +52,3 @@ add_subdirectory(tests)
 
 # ---- benchmark and result figures (Jedrek) -------------------------------
 add_subdirectory(bench)
-
-# ---- benchmark: for threading (Wai Men) ------------------------------------
-add_executable(bench_energy bench/bench_energy.cpp)
-target_link_libraries(bench_energy PRIVATE seamcore)

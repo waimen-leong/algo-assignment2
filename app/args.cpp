@@ -1,7 +1,7 @@
 #include "app/args.h"
 #include "algos/stub_seam.h"
 
-// Real finders appear as B, C and D merge. Each teammate adds their header
+// Real finders appear as Shahir, Wai Men and Jun Siang merge. Each teammate adds their header
 // here and defines the matching HAVE_* macro (or we detect __has_include).
 // Until then every name falls back to the stub so the whole app still runs.
 #if defined(__has_include)
