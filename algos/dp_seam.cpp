@@ -100,11 +100,16 @@ Seam DPSeamFinderLowMem::find(const cv::Mat1f& e)
     }
 
     Seam seam(rows);
+    // Find where the cheapest seam ends. prev now holds the LAST row's costs
+    // (after the final swap). Strict '<' keeps the leftmost column on ties.
     int j = 0;
     for (int c = 1; c < cols; ++c)
         if (prev[c] < prev[j])
             j = c;
     seam[rows - 1] = j;
+    // Walk up to row 0. from(i, j) is -1/0/+1: which parent (up-left,
+    // straight, up-right) gave the cheapest cost, so adding it moves j
+    // to that parent's column in row i-1.
     for (int i = rows - 1; i >= 1; --i)
     {
         j += from(i, j);
