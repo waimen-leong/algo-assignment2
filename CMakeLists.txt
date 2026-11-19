@@ -17,9 +17,13 @@ find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs highgui)
 add_library(seamcore STATIC
     core/energy.cpp
     core/carver.cpp
+    algos/greedy_seam.cpp
+    core/energy_mt.cpp
     # algos/ files go here (B: dp_seam.cpp, C: greedy_seam.cpp energy_mt.cpp,
     # D: flow_graph.cpp graphcut_seam.cpp)
     algos/dp_seam.cpp
+    algos/flow_graph.cpp
+    algos/graphcut_seam.cpp
 )
 target_include_directories(seamcore PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -34,9 +38,20 @@ else()
 endif()
 
 # ---- seamcarve: the app (Person E) -----------------------------------------
-add_executable(seamcarve app/main.cpp)
+# E added app/args.cpp, app/viz.cpp, app/ui.cpp; highgui is needed for the
+# interactive window and the animated visualisation.
+add_executable(seamcarve
+    app/main.cpp
+    app/args.cpp
+    app/viz.cpp
+    app/ui.cpp
+)
 target_link_libraries(seamcarve PRIVATE seamcore)
 
 # ---- tests (Person F) ------------------------------------------------------
 enable_testing()
 add_subdirectory(tests)
+
+# ---- benchmark: for threading (wai men) ------------------------------------
+add_executable(bench_energy bench/bench_energy.cpp)
+target_link_libraries(bench_energy PRIVATE seamcore)
