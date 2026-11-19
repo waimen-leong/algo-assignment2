@@ -1,4 +1,4 @@
-# Owned by Person A. Need a new file added? Tell A the file name.
+# Owned by Javier.
 cmake_minimum_required(VERSION 3.16)
 project(SeamCarving LANGUAGES CXX)
 
@@ -32,10 +32,13 @@ else()
     target_compile_options(seamcore PRIVATE -Wall -Wextra)
 endif()
 
-# ---- seamcarve: the app (Person E) -----------------------------------------
+# ---- seamcarve: the app (Kai Yang) -----------------------------------------
 add_executable(seamcarve app/main.cpp)
 target_link_libraries(seamcarve PRIVATE seamcore)
 
-# ---- tests (Person F) ------------------------------------------------------
+# ---- tests (Jedrek) ------------------------------------------------------
 enable_testing()
 add_subdirectory(tests)
+
+# ---- benchmark and result figures (Jedrek) -------------------------------
+add_subdirectory(bench)
