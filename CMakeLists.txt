@@ -17,6 +17,8 @@ find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs highgui)
 add_library(seamcore STATIC
     core/energy.cpp
     core/carver.cpp
+    algos/greedy_seam.cpp
+    core/energy_mt.cpp
     # algos/ files go here (B: dp_seam.cpp, C: greedy_seam.cpp energy_mt.cpp,
     # D: flow_graph.cpp graphcut_seam.cpp)
 )
@@ -39,3 +41,7 @@ target_link_libraries(seamcarve PRIVATE seamcore)
 # ---- tests (Person F) ------------------------------------------------------
 enable_testing()
 add_subdirectory(tests)
+
+# ---- benchmark: for threading (wai men) ------------------------------------
+add_executable(bench_energy bench/bench_energy.cpp)
+target_link_libraries(bench_energy PRIVATE seamcore)
