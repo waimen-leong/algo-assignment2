@@ -21,6 +21,7 @@ add_library(seamcore STATIC
     core/energy_mt.cpp
     # algos/ files go here (B: dp_seam.cpp, C: greedy_seam.cpp energy_mt.cpp,
     # D: flow_graph.cpp graphcut_seam.cpp)
+    algos/dp_seam.cpp
     algos/flow_graph.cpp
     algos/graphcut_seam.cpp
 )
