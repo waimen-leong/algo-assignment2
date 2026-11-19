@@ -1,6 +1,3 @@
-// Correctness checks for the graph-cut seam finder (Person D -> Person F).
-// No framework: each CHECK prints on failure; exit code 1 if any failed.
-//
 // The key property: on any energy map, the max-flow value, the cost of the
 // graph-cut seam, and the DP optimum are all equal. Seams may differ on ties;
 // costs may not.
@@ -28,8 +25,7 @@ static int failures = 0;
         }                                                                  \
     } while (0)
 
-// Reference optimum: textbook seam DP (cost only). Kept local so this test does
-// not depend on B's finder; it can be swapped for DpSeamFinder once merged.
+// Reference optimum: textbook seam DP (cost only).
 static double dpMinCost(const cv::Mat1f& e) {
     std::vector<double> prev(e.cols), cur(e.cols);
     for (int j = 0; j < e.cols; ++j) prev[j] = e(0, j);

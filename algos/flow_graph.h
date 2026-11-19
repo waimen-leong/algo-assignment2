@@ -2,7 +2,6 @@
 #include <vector>
 
 // Directed flow network with integer capacities, solved by Edmonds-Karp.
-// Owned by Person D. Has no OpenCV dependency, so it can be tested on its own.
 
 // "Infinite" capacity. Large enough that no finite cut ever reaches it, and
 // small enough that adding a few of them cannot overflow a long long.

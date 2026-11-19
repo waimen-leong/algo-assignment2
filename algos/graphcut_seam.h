@@ -2,8 +2,6 @@
 #include "algos/flow_graph.h"
 #include "common/types.h"
 
-// Seam finding as a minimum s-t cut. Owned by Person D.
-//
 // Pixel (i, j) of an H x W energy map is node i*W + j; the source is H*W and
 // the sink H*W + 1. The S side of the minimum cut is, in every row, an unbroken
 // run of pixels from column 0, and the seam is the last pixel of that run.
