@@ -15,4 +15,5 @@ jobs:
       - name: Build
         run: cmake --build build -j
       - name: Test
-        run: ctest --test-dir build --output-on-failure
+        # --no-tests=error: fail if the tests didn't get built, instead of passing silently
+        run: ctest --test-dir build --output-on-failure --no-tests=error

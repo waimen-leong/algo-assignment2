@@ -1,5 +1,7 @@
 # Seam Carving (CSD3130 Assignment 2)
 
+![CI](https://github.com/waimen-leong/algo-assignment2/actions/workflows/ci.yml/badge.svg)
+
 ## Build
 
 Linux / WSL:
