@@ -1,6 +1,6 @@
 # tests/CMakeLists.txt — builds one test program, seam_tests, and registers it with ctest.
 #
-# The top-level CMakeLists.txt needs these two lines (ask A, or add them):
+# The top-level CMakeLists.txt needs these two lines:
 #     enable_testing()
 #     add_subdirectory(tests)
 
@@ -35,7 +35,7 @@ target_link_libraries(seam_tests PRIVATE seamcore ${OpenCV_LIBS})
 
 add_test(NAME seam_tests COMMAND seam_tests)
 
-# A's own sanity checks (tests/test_core.cpp): a separate program with its own
+# Javier's own sanity checks (tests/test_core.cpp): a separate program with its own
 # main(), so it is built on its own and also run by ctest.
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_core.cpp")
     add_executable(test_core test_core.cpp)
@@ -43,3 +43,12 @@ if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test_core.cpp")
     target_link_libraries(test_core PRIVATE seamcore ${OpenCV_LIBS})
     add_test(NAME test_core COMMAND test_core)
 endif()
+# Owned by Jedrek. test_core is Javier's sanity check for the core.
+add_executable(test_core test_core.cpp)
+target_link_libraries(test_core PRIVATE seamcore)
+add_test(NAME test_core COMMAND test_core)
+
+# test_greedy belongs to Wai Men
+add_executable(test_greedy test_greedy.cpp)
+target_link_libraries(test_greedy PRIVATE seamcore)
+add_test(NAME test_greedy COMMAND test_greedy)

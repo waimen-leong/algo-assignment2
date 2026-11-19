@@ -1,58 +1,118 @@
-// PLACEHOLDER by Person A so the pipeline runs end to end.
-// Person E replaces this with the real app (parseArgs, makeFinder, UI).
-//
-// Usage: seamcarve --in input.jpg [--out out.png] [--width W] [--height H]
-#include "algos/stub_seam.h"
+// Person E: the seam-carving application.
+//   - CLI parsing and the carve/report flow                (parseArgs, makeFinder)
+//   - bonus (a) step-by-step / animated red-seam visualisation (viz.*)
+//   - bonus (b) interactive slider + algorithm-switch window    (ui.*)
+#include "app/args.h"
+#include "app/ui.h"
+#include "app/viz.h"
 #include "core/carver.h"
 
+#include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
 
 #include <chrono>
-#include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <string>
 
 int main(int argc, char** argv) {
-    std::string in, out = "out.png", algo = "stub";
-    int width = -1, height = -1;
-
-    for (int i = 1; i + 1 < argc; i += 2) {
-        std::string key = argv[i], val = argv[i + 1];
-        if (key == "--in") in = val;
-        else if (key == "--out") out = val;
-        else if (key == "--width") width = std::atoi(val.c_str());
-        else if (key == "--height") height = std::atoi(val.c_str());
-        else if (key == "--algo") algo = val;
-        else { std::cerr << "unknown option " << key << "\n"; return 2; }
+    Args args;
+    try {
+        args = parseArgs(argc, argv);
+    } catch (const std::exception& ex) {
+        std::cerr << "error: " << ex.what() << "\n" << usage() << "\n";
+        return 2;
     }
-    if (in.empty()) {
-        std::cerr << "usage: seamcarve --in input.jpg [--out out.png] "
-                     "[--width W] [--height H]\n";
+    if (args.showHelp) {
+        std::cout << usage() << "\n";
+        return 0;
+    }
+    if (args.in.empty()) {
+        std::cerr << "error: --in is required\n" << usage() << "\n";
         return 2;
     }
 
-    cv::Mat3b img = cv::imread(in, cv::IMREAD_COLOR);
-    if (img.empty()) { std::cerr << "cannot read " << in << "\n"; return 1; }
-    if (width < 0) width = img.cols;
-    if (height < 0) height = img.rows;
+    cv::Mat3b img = cv::imread(args.in, cv::IMREAD_COLOR);
+    if (img.empty()) {
+        std::cerr << "error: cannot read image '" << args.in << "'\n";
+        return 1;
+    }
 
-    if (algo != "stub")
-        std::cerr << "note: only 'stub' exists in the skeleton, using it\n";
-    StubSeamFinder finder;
+    // Interactive mode ignores --width/--height/--out and drives everything
+    // from the window instead.
+    if (args.interactive) {
+        runInteractive(img);
+        return 0;
+    }
 
+    // Fill in the "keep original size" defaults now that we know the image.
+    const int targetW = (args.width  == -1) ? img.cols : args.width;
+    const int targetH = (args.height == -1) ? img.rows : args.height;
+
+    auto finder = makeFinder(args.algo);
+    const std::string requested = args.algo;
+    const std::string actual = finder->name();
+    if (actual != requested)
+        std::cerr << "note: algorithm '" << requested
+                  << "' is not available yet, using '" << actual << "'\n";
+
+    // Build the step callback: animate on screen with --step (the window shows
+    // each red seam), and/or dump frames with --frames. Either, both, neither.
+    const bool animate = args.step;  // show a window while carving
+    std::unique_ptr<FrameWriter> writer;
     try {
-        auto t0 = std::chrono::steady_clock::now();
-        cv::Mat3b result = carve(img, width, height, finder);
-        auto ms = std::chrono::duration<double, std::milli>(
-                      std::chrono::steady_clock::now() - t0).count();
-
-        cv::imwrite(out, result);
-        std::cout << img.cols << "x" << img.rows << " -> " << result.cols << "x"
-                  << result.rows << " using " << finder.name() << " in " << ms
-                  << " ms, saved to " << out << "\n";
+        if (!args.framesDir.empty())
+            writer = std::make_unique<FrameWriter>(args.framesDir, img.cols,
+                                                   img.rows);
     } catch (const std::exception& ex) {
         std::cerr << "error: " << ex.what() << "\n";
         return 1;
+    }
+
+    if (animate)
+        cv::namedWindow("Seam carving", cv::WINDOW_AUTOSIZE);
+
+    StepCallback cb;
+    if (animate || writer) {
+        cb = [&](const cv::Mat3b& im, const Seam& s, bool vertical) {
+            if (animate) {
+                cv::imshow("Seam carving", drawSeam(im, s, vertical));
+                cv::waitKey(args.step ? 0 : 15);  // --step waits for a key
+            }
+            if (writer) writer->write(im, s, vertical);
+        };
+    }
+
+    try {
+        auto t0 = std::chrono::steady_clock::now();
+        cv::Mat3b result = carve(img, targetW, targetH, *finder, cb);
+        double ms = std::chrono::duration<double, std::milli>(
+                        std::chrono::steady_clock::now() - t0).count();
+
+        if (!cv::imwrite(args.out, result)) {
+            std::cerr << "error: cannot write '" << args.out << "'\n";
+            return 1;
+        }
+
+        const int seamsRemoved = (img.cols - result.cols) + (img.rows - result.rows);
+        std::cout << "algorithm:    " << actual << "\n"
+                  << "input:        " << img.cols << "x" << img.rows << "\n"
+                  << "output:       " << result.cols << "x" << result.rows << "\n"
+                  << "seams removed: " << seamsRemoved << "\n"
+                  << "time:         " << ms << " ms\n"
+                  << "saved to:     " << args.out << "\n";
+        if (writer)
+            std::cout << "frames:       " << writer->count() << " in "
+                      << args.framesDir << "\n";
+    } catch (const std::exception& ex) {
+        std::cerr << "error: " << ex.what() << "\n";
+        return 1;
+    }
+
+    if (animate) {
+        std::cout << "press any key in the window to close\n";
+        cv::waitKey(0);
+        cv::destroyAllWindows();
     }
     return 0;
 }
