@@ -1,4 +1,4 @@
-// Person E: the seam-carving application.
+// Kai Yang: the seam-carving application.
 //   - CLI parsing and the carve/report flow                (parseArgs, makeFinder)
 //   - bonus (a) step-by-step / animated red-seam visualisation (viz.*)
 //   - bonus (b) interactive slider + algorithm-switch window    (ui.*)

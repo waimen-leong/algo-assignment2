@@ -1,6 +1,7 @@
-# bench/CMakeLists.txt — two programs, separate from the tests:
+# bench/CMakeLists.txt — three programs, separate from the tests:
 #   seam_bench    timing + seam cost  -> results.csv, timing_breakdown.csv
 #   seam_figures  seam overlays and side-by-side quality images
+#   bench_energy  single- vs multi-threaded energy map -> energy_bench.csv
 #
 # Top-level CMakeLists.txt needs:   add_subdirectory(bench)
 
@@ -18,3 +19,8 @@ foreach(prog seam_bench seam_figures)
     target_compile_features(${prog} PRIVATE cxx_std_17)
     target_link_libraries(${prog} PRIVATE seamcore ${OpenCV_LIBS})
 endforeach()
+
+# Energy map threading benchmark (Wai Men): ComputeEnergyST vs ComputeEnergyMT.
+add_executable(bench_energy bench_energy.cpp)
+target_compile_features(bench_energy PRIVATE cxx_std_17)
+target_link_libraries(bench_energy PRIVATE seamcore ${OpenCV_LIBS})

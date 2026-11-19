@@ -48,3 +48,13 @@ endif()
 add_executable(test_greedy test_greedy.cpp)
 target_link_libraries(test_greedy PRIVATE seamcore)
 add_test(NAME test_greedy COMMAND test_greedy)
+
+# Jun Siang's own graph cut checks (tests/test_graphcut.cpp): standalone program with its own main().
+add_executable(test_graphcut test_graphcut.cpp)
+target_link_libraries(test_graphcut PRIVATE seamcore ${OpenCV_LIBS})
+add_test(NAME test_graphcut COMMAND test_graphcut)
+
+# Shahir's DP checks (tests/test_dp.cpp): standalone program with its own main().
+add_executable(test_dp test_dp.cpp)
+target_link_libraries(test_dp PRIVATE seamcore ${OpenCV_LIBS})
+add_test(NAME test_dp COMMAND test_dp)

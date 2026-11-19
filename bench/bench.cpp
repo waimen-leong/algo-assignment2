@@ -12,7 +12,7 @@
 // Build in Release (the CI and README commands already do this), then run:
 //   ./build/bench/seam_bench                       # synthetic test image
 //   ./build/bench/seam_bench --image photo.jpg     # your own image, resized to each size
-//   ./build/bench/seam_bench --graphcut-max-width 400   # if D says 400x300 is feasible
+//   ./build/bench/seam_bench --graphcut-max-width 400   # if Jun Siang says 400x300 is feasible
 #include "seam_api.h"
 
 #include <opencv2/imgcodecs.hpp>
@@ -28,6 +28,10 @@
 #include <random>
 #include <string>
 #include <vector>
+
+#ifdef __GLIBC__
+#include <malloc.h>
+#endif
 
 struct BenchResult {
     std::string algo;
@@ -100,6 +104,15 @@ static void usage() {
 }
 
 int main(int argc, char** argv) {
+#ifdef __GLIBC__
+    // Every seam allocates fresh multi-MB buffers (energy map, Sobel temporaries,
+    // DP table). By default glibc hands those back to the OS after each call and
+    // gets new pages next time, and page faults (slow on WSL) then swamp the
+    // timing: energy at 800x600 measured 8.5 ms instead of 0.57 ms. Keep freed
+    // memory for reuse so we time the algorithms, not the OS. Benchmark only.
+    mallopt(M_MMAP_THRESHOLD, 32 * 1024 * 1024);
+    mallopt(M_TRIM_THRESHOLD, 256 * 1024 * 1024);
+#endif
     std::string imagePath, outPath = "results.csv", breakdownPath = "timing_breakdown.csv";
     int nSeams = 20, nRuns = 3, graphcutMaxWidth = 200;
 

@@ -3,15 +3,15 @@
 // Each block only compiles if that algorithm has been merged (SeamDetect.cmake
 // sets SEAM_HAVE_DP etc.), so main always builds even mid-week.
 //
-//   test_dp          B's example + DP equals brute force on 100 random 5x5 grids
+//   test_dp          Shahir's example + DP equals brute force on 100 random 5x5 grids
 //   test_dp_lowmem   low-memory DP gives the identical seam to normal DP
-//   test_greedy      C's counter-example costs 19 + greedy is never cheaper than optimal
+//   test_greedy      Wai Men's counter-example costs 19 + greedy is never cheaper than optimal
 //   test_graphcut    graph cut cost equals the optimum on 100 random 8x8 grids
 //   test_carve_all   every finder carves 20x15 down to 12x10
 //
 // About the two hand-made grids below: they were built to have exactly the
 // answers the plan asks for (DP: seam {0,1,1}, cost 5; greedy: cost 19), with no
-// ties, so the tie rule doesn't matter. If B or C use different example grids in
+// ties, so the tie rule doesn't matter. If Shahir or Wai Men use different example grids in
 // the report, paste theirs in instead so the report and tests match.
 #include "doctest.h"
 #include "test_helpers.h"

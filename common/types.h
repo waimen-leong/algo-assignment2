@@ -1,4 +1,4 @@
-// FROZEN CONTRACT - owned by Person A.
+// FROZEN CONTRACT - owned by Javier.
 // Changes only if the whole team agrees.
 #pragma once
 #include <opencv2/core.hpp>

@@ -1,4 +1,4 @@
-// Sanity checks for core/ (energy + carver), from Person A's checklist.
+// Sanity checks for core/ (energy + carver), from Javier's checklist.
 // No framework: each CHECK prints on failure; exit code 1 if any failed.
 #include "algos/stub_seam.h"
 #include "core/carver.h"

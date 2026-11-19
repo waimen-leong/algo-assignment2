@@ -1,4 +1,4 @@
-// test_core_units.cpp — doctest tests for A's core functions (A's own test_core.cpp is kept as a separate test).
+// test_core_units.cpp — doctest tests for Javier's core functions (Javier's own test_core.cpp is kept as a separate test).
 // so they work from the skeleton onwards.
 //
 //   test_energy   computeEnergy
